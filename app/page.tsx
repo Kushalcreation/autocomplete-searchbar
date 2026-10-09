@@ -6,16 +6,27 @@ const Page = () => {
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [cache, setCache] = useState({});
 
   const fetchData = async () => {
+    if (cache[input]) {
+      setResults(cache[input]);
+      return;
+    }
+
+    console.log("API CALL :", input);
     const data = await axios.get(
       "https://dummyjson.com/recipes/search?q=" + input,
     );
     setResults(data.data.recipes);
+    setCache((prev) => ({ ...prev, [input]: json?.recipes }));
   };
 
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(fetchData, 300);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [input]);
 
   return (
