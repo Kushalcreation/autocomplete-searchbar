@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const Page = () => {
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
 
   const fetchData = async () => {
     const data = await axios.get(
@@ -24,16 +25,20 @@ const Page = () => {
         type="text"
         placeholder="Enter Recipie Here"
         value={input}
+        onFocus={() => setShowResults(true)}
+        onBlur={() => setShowResults(false)}
         onChange={(e) => setInput(e.target.value)}
-        className="w-[500px] border p-1 rounded-t"
+        className="w-[500px] border p-2 rounded-t"
       />
-      <div className="w-[500px] h-[400px] overflow-scroll overflow-x-hidden m-auto border p-2 rounded-b text-left">
-        {results.map((r) => (
-          <span className="block hover:bg-slate-50 cursor-pointer" key={r.id}>
-            {r.name}
-          </span>
-        ))}
-      </div>
+      {showResults && (
+        <div className="w-[500px] max-h-[400px] overflow-scroll overflow-x-hidden m-auto border p-2 rounded-b text-left">
+          {results.map((r) => (
+            <span className="block hover:bg-slate-50 cursor-pointer" key={r.id}>
+              {r.name}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
